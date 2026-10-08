@@ -1,0 +1,117 @@
+/dts-v1/;
+/ {
+    model = "loongson,generic";
+    compatible = "loongson,loongson3";
+    #address-cells = <2>;
+    #size-cells = <2>;
+
+    chosen {
+        stdout-path = &uart0;
+        bootargs = "console=ttyS0,115200 init=/init loglevel=8 earlycon swiotlb=64 dhash_entries=16384 ihash_entries=16384 norandmaps";
+    };
+
+    // 0x0000_0000-0x1000_0000 (256MB)
+    // memory {
+    //     device_type = "memory";
+    //     reg = <0x0 0x00000000 0x0 0x10000000>;
+    // };
+
+    // For FPGA DDR4
+    // memory {
+    //     device_type = "memory";
+    //     reg = <0x0 0x00000000 0x0 0x10000000
+    //            0x0 0x10000000 0x0 0x08000000
+    //            0x0 0x20000000 0x0 0x10000000
+    //            0x0 0x30000000 0x0 0x10000000
+    //            0x0 0x40000000 0x0 0x40000000
+    //            0x0 0x80000000 0x0 0x80000000>;
+    // };
+
+    // For DDR3
+    memory {
+        device_type = "memory";
+        reg = <0x0 0x00000000 0x0 0x08000000>;
+    };
+
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        
+        cpu0: cpu@0 {
+            device_type = "cpu";
+            compatible = "loongarch,la132";
+            reg=<0x0>;
+        };
+    };
+
+    cpuic: interrupt-controller {
+            compatible = "loongson,cpu-interrupt-controller";
+            interrupt-controller;
+            #interrupt-cells = <1>;
+    };
+
+    clk100: clk100 {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <100000000>;
+    };
+
+    clk625: clk625 {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <625000000>;
+    };
+
+    soc {
+        compatible = "loongson,nbus", "simple-bus";
+        #address-cells = <2>;
+        #size-cells = <2>;
+        enable-lpc-irq;
+        ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x20000000>;
+
+        uart0: serial@1fe00000 {
+            device_type = "serial";
+            compatible = "ns16550a";
+            reg = <0x0 0x1fe00000 0x0 0x1000>;
+            clock-frequency = <100000000>;
+            interrupt-parent = <&cpuic>;
+            interrupts = <2>;
+            reg-io-width = <4>;
+            reg-shift = <2>;
+            no-loopback-test;
+        };
+
+    };
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

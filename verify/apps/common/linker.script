@@ -1,0 +1,168 @@
+/* See LICENSE for license details. */
+
+OUTPUT_ARCH(loongarch)
+
+PHDRS
+{
+  text PT_LOAD FLAGS(5);  /* R + X */
+  data PT_LOAD FLAGS(6);  /* R + W */
+  stack PT_GNU_STACK FLAGS(6);
+}
+
+SECTIONS
+{
+
+  /*--------------------------------------------------------------------*/
+  /* Code and read-only segment                                         */
+  /*--------------------------------------------------------------------*/
+
+  /* Begining of code and text segment */
+  . = MEM_START;
+  .text :
+  {
+    *start.o (.text)
+    *(.text*)
+    *(.text.init)
+  } :text
+
+  /* text: Program code section */
+  .text : 
+  {
+    *(.text)
+    *(.text.*)
+    *(.gnu.linkonce.t.*)
+
+    . = ALIGN(0x100);
+    _expt_base = .;
+    *(.expt.text)
+  } :text
+
+  /* rodata: Read-only data */
+  .rodata : 
+  {
+    *(.rdata)
+    *(.rodata)
+    *(.rodata.*)
+    *(.gnu.linkonce.r.*)
+    *(.eh_frame*)
+  } :text
+
+  /* End of code and read-only segment */
+  . = ALIGN(0x1000);
+  _etext = .;
+
+  /*--------------------------------------------------------------------*/
+  /* HTIF, isolated onto separate page                                  */
+  /*--------------------------------------------------------------------*/
+  .htif :
+  {
+    PROVIDE( __htif_base = . );
+    *(.htif)
+  } :data
+  . = ALIGN(0x1000);
+
+  /*--------------------------------------------------------------------*/
+  /* Initialized data segment                                           */
+  /*--------------------------------------------------------------------*/
+
+  /* Start of initialized data segment */
+  . = ALIGN(16);
+   _fdata = .;
+
+  .preinit_array :
+  {
+    PROVIDE(__preinit_array_start = .);
+    KEEP(*(.preinit_array))
+    KEEP(*(.preinit_array.*))
+    PROVIDE(__preinit_array_end = .);
+  } :data
+
+  .init_array :
+  {
+    PROVIDE(__init_array_start = .);
+    KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)))
+    KEEP(*(.init_array))
+    PROVIDE(__init_array_end = .);
+  } :data
+
+  .fini_array :
+  {
+    PROVIDE(__fini_array_start = .);
+    KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)))
+    KEEP(*(.fini_array))
+    PROVIDE(__fini_array_end = .);
+  } :data
+
+  /* data: Writable data */
+  .data : 
+  {
+    PROVIDE(__global_pointer$ = . + 0x800);
+    *(.data)
+    *(.data.*)
+    *(.sdata)
+    *(.sdata.*)
+    *(.srodata*)
+    *(.got)
+    *(.got.*)
+    *(.gnu.linkonce.d.*)
+    *(.comment)
+    *(.dtb)
+  } :data
+
+  /* End of initialized data segment */
+  . = ALIGN(16);
+  _edata = .;
+
+  /*--------------------------------------------------------------------*/
+  /* Uninitialized data segment                                         */
+  /*--------------------------------------------------------------------*/
+
+  /* Start of uninitialized data segment */
+  . = .;
+  _fbss = .;
+
+  /* sbss: Uninitialized writeable small data section */
+  . = .;
+
+  /* bss: Uninitialized writeable data section */
+  . = .;
+  _bss_start = .;
+  .bss : 
+  {
+    *(.bss)
+    *(.bss.*)
+    *(.sbss*)
+    *(.gnu.linkonce.b.*)
+    *(COMMON)
+  } :data
+  . = ALIGN(16);
+  _bss_end = .;
+
+  . = ALIGN(0x1000);
+  _stack_start = .;
+  .stack : 
+  {
+    KEEP(*(.stack))
+  } :data
+  _stack_end = .;
+  PROVIDE(_stack_top = _stack_end);
+
+  . = ALIGN(16);
+  PROVIDE(_heap_start = .);
+  PROVIDE(_heap_end = MEM_START + 0x18000);
+  ASSERT(_heap_start <= _heap_end, "verify/common heap overlaps dummy exit area")
+
+  . = MEM_START + 0x18000;
+  .dymmy_exit :
+  {
+    *(.dymmy_exit)
+  } :data
+
+  . = ALIGN(0x10000);
+  .bss..page_aligned :
+  {
+    *(.bss..page_aligned)
+  } :data
+  _end = .;
+  PROVIDE(end = _end);
+}

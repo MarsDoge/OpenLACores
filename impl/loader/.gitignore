@@ -1,0 +1,13 @@
+/bootargs.h
+/entry.h
+/loader_config.h
+/*.dtbo
+/*.o
+/*.bin
+/*.exe
+/*.exe.S
+/*.exe.map
+/*.exe.size
+/link.map
+/tmp.txt
+/vmlinux.raw.bin
