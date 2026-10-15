@@ -215,6 +215,10 @@ upload 除 bitstream 外还涉及 loader、内核镜像、JTAG 硬件选择和�
 
 -   loongsonlab@loongson.cn
 
+## 贡献与协作说明
+
+贡献流程、问题反馈、提交和评审要求请见[贡献与协作说明](docs/contributing.md)。
+
 ##  致谢
 
 感谢龙芯中科技术股份有限公司的支持。

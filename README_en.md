@@ -211,6 +211,10 @@ For project questions or to join the project, contact us at:
 
 - loongsonlab@loongson.cn
 
+## Contribution and Collaboration Guidelines
+
+For contribution workflows, issue reporting, commit requirements, and review expectations, see the [Contribution and Collaboration Guidelines](docs/contributing_en.md).
+
 ## Acknowledgments
 
 Thanks to Loongson Technology Corporation Limited for its support.
