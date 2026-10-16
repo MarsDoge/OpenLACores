@@ -274,7 +274,7 @@ assign cpucfg11       =  {
 //------------------------------------------------------------//
 assign cfg12_D_WAY32  =  HAS_DCC == 0 ? 32'd0 : DCC_SET_ASSOC - 1;
 assign cfg12_D_IDX32  =  HAS_DCC == 0 ? 32'd0 : `OPEN132_DCC_INDEX_BITS;
-assign cfg12_D_LS32   =  HAS_ICC == 0 ? 32'd0 : 32'd5;
+assign cfg12_D_LS32   =  HAS_DCC == 0 ? 32'd0 : 32'd5;
 assign cpucfg12       =  {
                            1'b0,  // 31   , reserved
                            cfg12_D_LS32[6 : 0],  // 30:24, D$ $log2(cacheline-size)
