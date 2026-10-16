@@ -173,8 +173,10 @@ assign high_miss           = de_pred_valid && (&high_update_miss);
 assign tag_which_high_nxt  = high_miss ? high_update_sel
                                        : high_update_miss[0];
 assign tag_nxt         = de_pred_pc_low_part;
-assign tag_high_wen[0] =!high_update_sel && high_miss && br_update_rate_hit;
-assign tag_high_wen[1] = high_update_sel && high_miss && br_update_rate_hit;
+assign tag_high_wen[0] =!high_update_sel && high_miss &&
+                         (de_pred_jr ? jr_update_rate_hit : br_update_rate_hit);
+assign tag_high_wen[1] = high_update_sel && high_miss &&
+                         (de_pred_jr ? jr_update_rate_hit : br_update_rate_hit);
 
 ifu_dec4_16 update_sel_decode(
     .decode_index  (de_pred_pos),
