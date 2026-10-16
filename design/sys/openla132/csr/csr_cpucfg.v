@@ -30,7 +30,7 @@ module csr_cpucfg #(
 ) (
     input  wire [  3: 0]  prid_revision,
     input  wire           inst_cpucfg,
-    input  wire [ 13: 0]  cpucfg_addr,
+    input  wire [ 31: 0]  cpucfg_addr,
 
     output wire [ 31: 0]  cpucfg_result
 );
@@ -93,7 +93,7 @@ wire [ 31: 0] cfg12_D_LS32;   // cacheline size= 2^5 bytes
 //------------------------------------------------------------//
 //                        Cpucfgs Read
 //------------------------------------------------------------//
-assign cpucfg_addr_valid  =  cpucfg_addr[13:5] == 9'd0;
+assign cpucfg_addr_valid  =  cpucfg_addr[31:5] == 27'd0;
 assign cpucfg0_ren        =  inst_cpucfg && cpucfg_addr_valid && cpucfg_addr[4:0] == 5'h0;
 assign cpucfg1_ren        =  inst_cpucfg && cpucfg_addr_valid && cpucfg_addr[4:0] == 5'h1;
 assign cpucfg2_ren        =  inst_cpucfg && cpucfg_addr_valid && cpucfg_addr[4:0] == 5'h2;
